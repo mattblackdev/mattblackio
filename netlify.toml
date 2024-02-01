@@ -9,7 +9,4 @@
 [[redirects]]
   from = "/golddippedroses"
   to = "https://3d120u9c82tn3p176kmbq31b-c.hop.clickbank.net/?tid=g0ld"
-  status = 301
-  force = false
-  query = {path = ":path"}
-  conditions = {Language = ["en"], Country = ["US"], Role = ["admin"]}
+  force = true
