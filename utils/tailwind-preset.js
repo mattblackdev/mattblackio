@@ -23,6 +23,7 @@ const themesConfig = plugin(function ({ addComponents }) {
 
   cssVars['--font-primary'] = FONT_THEMES[FONT_PRIMARY];
   cssVars['--font-secondary'] = FONT_THEMES[FONT_SECONDARY];
+  cssVars['--font-monospace'] = FONT_THEMES['monospace'];
 
   const themeCompiled = {
     '.theme-compiled': cssVars,
@@ -48,6 +49,7 @@ module.exports = {
       fonts: {
         primary: 'var(--font-primary)',
         secondary: 'var(--font-secondary)',
+        monospace: 'var(--font-monospace)',
       },
       theme: {
         bejamas: {

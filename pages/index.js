@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { getPosts } from '../utils/mdx-utils';
 
+import Image from 'next/image';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Layout, { GradientBackground } from '../components/Layout';
-import ArrowIcon from '../components/ArrowIcon';
-import { getGlobalData } from '../utils/global-data';
 import SEO from '../components/SEO';
-import Image from 'next/image';
+import profilePic from '../public/profile_pic.png';
+import { getGlobalData } from '../utils/global-data';
 
 const description =
   'Sr. Software Engineer with 10 years of experience in web, mobile, desktop, cross-platform, and 3D application development. Proficient in mobile and web architecture, training & development, performance optimization, and robotic process automation.';
@@ -20,16 +20,17 @@ export default function Index({ posts, globalData }) {
       <main className="w-full">
         <div className="w-full flex justify-center items-center mt-16">
           <Image
+            alt="profile headshot of a handsome man stading in front of glass windows"
             className="rounded-full"
+            src={profilePic}
             width="174"
             height="174"
-            src="/profile_pic.png"
-            alt="profile headshot of a handsome man stading in front of glass windows"
+            priority
           />
         </div>
         <div className="px-10 w-full mx-auto mt-16">
-          <p className="mb-16 text-justify">{description}</p>
-          <h2 id="projects" className="text-4xl mt-4 mb-7">
+          <p className="text-justify">{description}</p>
+          <h2 id="projects" className="text-4xl mt-20 mb-7">
             Projects
           </h2>
           <h3 className="font-bold mb-2">Black Diamond Mobile App</h3>
@@ -45,33 +46,32 @@ export default function Index({ posts, globalData }) {
             base consists of over 100,000 investors and financial advisors.
           </p>
           <h3 className="font-bold mb-2">StickRPG 4D</h3>
+          <Link href="https://stickrpg4d.com">
+            <a className="underline text-blue-300 hover:text-primary">
+              www.stickrpg4d.com
+            </a>
+          </Link>
           <p className="text-justify">
             Launched a 3D web game using React, R3F, and ThreeJS. Designed and
             developed custom interactive environments, third-person character
             controls, dynamic physics, real-time lighting and shadows,
             animations, independent game systems, NPC dialog, branching
             storyline, and visual and audio eﬀects.
-            <br />
-            <Link href="https://stickrpg4d.com">
-              <a className="underline text-blue-300 hover:text-primary">
-                www.stickrpg4d.com
-              </a>
-            </Link>
           </p>
-          <h2 id="contact" className="text-4xl mt-16 mb-7">
+          <h2 id="contact" className="text-4xl mt-20 mb-7">
             Contact
           </h2>
           <div>
             <Link href="mailto:matt@mattblack.dev">
               <a className="font-extrabold mx-2 leading-loose hover:text-primary">
-                Email: matt@mattblack.dev
+                matt@mattblack.dev
               </a>
             </Link>
           </div>
           <div>
             <Link href="tel:+19042489051">
               <a className="font-extrabold mx-2 leading-loose hover:text-primary">
-                Cell: +1-904-248-9051
+                +1-904-248-9051
               </a>
             </Link>
             <div>
