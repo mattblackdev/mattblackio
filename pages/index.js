@@ -4,13 +4,13 @@ import { getPosts } from '../utils/mdx-utils';
 import Image from 'next/image';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import Layout, { GradientBackground } from '../components/Layout';
+import Layout from '../components/Layout';
 import SEO from '../components/SEO';
 import profilePic from '../public/profile_pic.png';
 import { getGlobalData } from '../utils/global-data';
 
 const description =
-  'Sr. Software Engineer with 10 years of experience in web, mobile, desktop, cross-platform, and 3D application development. Proficient in mobile and web architecture, training & development, performance optimization, and robotic process automation.';
+  'Sr. Software Engineer with 10 years of experience in web, mobile, desktop, cross-platform, and 3D application development. Proficient in web and mobile architecture, training & development, and robotic process automation.';
 
 export default function Index({ posts, globalData }) {
   return (
@@ -85,14 +85,6 @@ export default function Index({ posts, globalData }) {
         </div>
       </main>
       <Footer copyrightText={globalData.footerText} />
-      <GradientBackground
-        variant="large"
-        className="fixed top-20 opacity-40 dark:opacity-60"
-      />
-      <GradientBackground
-        variant="small"
-        className="absolute bottom-0 opacity-20 dark:opacity-10"
-      />
     </Layout>
   );
 }
