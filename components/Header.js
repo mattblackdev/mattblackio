@@ -9,6 +9,16 @@ export default function Header({ name }) {
         </a>
       </Link>
       <span className="flex-1" />
+      <Link href="#experience">
+        <a className="font-extrabold mx-2 leading-loose hover:text-primary">
+          Experience
+        </a>
+      </Link>
+      <Link href="#skills">
+        <a className="font-extrabold mx-2 leading-loose hover:text-primary">
+          Skills
+        </a>
+      </Link>
       <Link href="#projects">
         <a className="font-extrabold mx-2 leading-loose hover:text-primary">
           Projects
