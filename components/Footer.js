@@ -1,3 +1,6 @@
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+
 const sunIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -48,42 +51,97 @@ const moonIcon = (
 );
 
 const ThemeSwitcher = () => {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  const handleDarkMode = () => {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+    setIsDark(true);
+  };
+
+  const handleLightMode = () => {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    setIsDark(false);
+  };
+
   return (
-    <div className="flex mt-6 bg-white justify-center dark:bg-gray-900 rounded-3xl p-1">
-      <button
+    <motion.div
+      className="flex mt-6 bg-white justify-center dark:bg-gray-900 rounded-3xl p-1"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+    >
+      <motion.button
         type="button"
         aria-label="Use Dark Mode"
-        onClick={() => {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-        }}
-        className="flex items-center h-full pr-2 dark:bg-primary rounded-3xl flex justify-center align-center p-2 w-24 h-10 transition"
+        onClick={handleDarkMode}
+        className="flex items-center h-full pr-2 dark:bg-primary rounded-3xl flex justify-center align-center p-2 w-24 h-10 transition relative overflow-hidden"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       >
-        {moonIcon}
-      </button>
+        <motion.div
+          className="absolute inset-0 bg-primary/20 rounded-3xl"
+          initial={{ scale: 0 }}
+          whileHover={{ scale: 1 }}
+          transition={{ duration: 0.2 }}
+        />
+        <motion.div
+          animate={{ rotate: isDark ? 360 : 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {moonIcon}
+        </motion.div>
+      </motion.button>
 
-      <button
+      <motion.button
         type="button"
         aria-label="Use Light Mode"
-        onClick={() => {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
-        }}
-        className="flex items-center h-full pr-2 bg-primary dark:bg-transparent rounded-3xl flex justify-center align-center p-2 w-24 h-10 transition"
+        onClick={handleLightMode}
+        className="flex items-center h-full pr-2 bg-primary dark:bg-transparent rounded-3xl flex justify-center align-center p-2 w-24 h-10 transition relative overflow-hidden"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       >
-        {sunIcon}
-      </button>
-    </div>
+        <motion.div
+          className="absolute inset-0 bg-primary/20 rounded-3xl"
+          initial={{ scale: 0 }}
+          whileHover={{ scale: 1 }}
+          transition={{ duration: 0.2 }}
+        />
+        <motion.div
+          animate={{ rotate: !isDark ? 360 : 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {sunIcon}
+        </motion.div>
+      </motion.button>
+    </motion.div>
   );
 };
 
 export default function Footer({ copyrightText }) {
   return (
-    <footer className="mt-32 flex flex-col items-center">
+    <motion.footer
+      className="mt-32 flex flex-col items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+    >
       <ThemeSwitcher />
-      <p className="dark:text-white uppercase mt-10 font-bold opacity-60">
+      <motion.p
+        className="dark:text-white uppercase mt-10 font-bold opacity-60"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
         {copyrightText}
-      </p>
-    </footer>
+      </motion.p>
+    </motion.footer>
   );
 }

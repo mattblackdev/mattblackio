@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { getPosts } from '../utils/mdx-utils';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 import Image from 'next/image';
 import Footer from '../components/Footer';
@@ -12,30 +14,106 @@ import { getGlobalData } from '../utils/global-data';
 const description =
   'Highly skilled and results driven senior software engineer with 10 years of experience in full stack web, mobile, and cross-platform application development. Proficient in React and React Native, cloud, enterprise, and micro-service architectures. Skilled in CI/CD, end-to-end automated testing, and process automation. Experienced in IT leadership, mentorship, feature estimation, development & debugging, dependency upgrades, and tech migrations. Passionate about learning and contributing to the tech community through speaking and attending conferences, local meetups, and contributing to open source. Values collaboration with cross-functional teams to create applications that meet user needs, provide business value, and deliver great experiences. Team player and servant leader. Proficient with Cursor AI IDE.';
 
+const SectionWrapper = ({ children, delay = 0 }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{ duration: 0.6, delay }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const ExperienceCard = ({ children, delay = 0 }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="mb-10 p-6 rounded-lg transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+      initial={{ opacity: 0, x: -30 }}
+      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 export default function Index({ posts, globalData }) {
   return (
     <Layout>
       <SEO title={globalData.name} description={description} />
       <Header />
       <main className="w-full">
-        <div className="w-full flex justify-center items-center mt-16">
-          <Image
-            alt="profile headshot of a handsome man stading in front of glass windows"
-            className="rounded-full"
-            src={profilePic}
-            width="174"
-            height="174"
-            priority
-          />
-        </div>
+        <motion.div
+          className="w-full flex justify-center items-center mt-16"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, type: 'spring', stiffness: 100 }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+            className="relative"
+          >
+            <motion.div
+              className="absolute inset-0 rounded-full bg-primary/20 blur-xl"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 0.8, 0.5],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            />
+            <Image
+              alt="profile headshot of a handsome man stading in front of glass windows"
+              className="rounded-full relative z-10"
+              src={profilePic}
+              width="174"
+              height="174"
+              priority
+            />
+          </motion.div>
+        </motion.div>
         <div className="px-10 w-full mx-auto mt-16">
-          <p className="text-justify">{description}</p>
+          <SectionWrapper delay={0.2}>
+            <motion.p
+              className="text-justify"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              {description}
+            </motion.p>
+          </SectionWrapper>
 
-          <h2 id="experience" className="text-4xl mt-20 mb-7">
-            Work Experience
-          </h2>
+          <SectionWrapper delay={0.3}>
+            <motion.h2
+              id="experience"
+              className="text-4xl mt-20 mb-7"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Work Experience
+            </motion.h2>
+          </SectionWrapper>
 
-          <div className="mb-10">
+          <ExperienceCard delay={0.1}>
             <h3 className="font-bold text-xl mb-1">
               Sr. Full Stack Mobile Developer
             </h3>
@@ -191,9 +269,9 @@ export default function Index({ posts, globalData }) {
                 </li>
               </ul>
             </div>
-          </div>
+          </ExperienceCard>
 
-          <div className="mb-10">
+          <ExperienceCard delay={0.15}>
             <h3 className="font-bold text-xl mb-1">Sr. Full Stack Developer</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-3">
               Servant.io | Remote Contract | 2025
@@ -353,9 +431,9 @@ export default function Index({ posts, globalData }) {
                 <li>Cloudflare Turnstile integration for security</li>
               </ul>
             </div>
-          </div>
+          </ExperienceCard>
 
-          <div className="mb-10">
+          <ExperienceCard delay={0.3}>
             <h3 className="font-bold text-xl mb-1">Sr. Mobile Developer</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-3">
               FIS | Remote Contract | 2024
@@ -370,9 +448,9 @@ export default function Index({ posts, globalData }) {
               <li>Screens with dynamic lists based on device</li>
               <li>Critical transaction list item views</li>
             </ul>
-          </div>
+          </ExperienceCard>
 
-          <div className="mb-10">
+          <ExperienceCard delay={0.4}>
             <h3 className="font-bold text-xl mb-1">Sr. Mobile Developer</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-3">
               Pickleball.com | Remote Contract | 2024
@@ -407,9 +485,9 @@ export default function Index({ posts, globalData }) {
                 <li>GraphQL, AppSync, and Lambdas</li>
               </ul>
             </div>
-          </div>
+          </ExperienceCard>
 
-          <div className="mb-10">
+          <ExperienceCard delay={0.5}>
             <h3 className="font-bold text-xl mb-1">Senior Software Engineer</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-3">
               SS&C Advent | Jacksonville, FL | 2021 - 2023
@@ -520,9 +598,9 @@ export default function Index({ posts, globalData }) {
                 </li>
               </ul>
             </div>
-          </div>
+          </ExperienceCard>
 
-          <div className="mb-10">
+          <ExperienceCard delay={0.6}>
             <h3 className="font-bold text-xl mb-1">Software Consultant</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-3">
               Hashrocket | Jacksonville, FL | 2019 - 2020
@@ -581,9 +659,9 @@ export default function Index({ posts, globalData }) {
                 </li>
               </ul>
             </div>
-          </div>
+          </ExperienceCard>
 
-          <div className="mb-10">
+          <ExperienceCard delay={0.7}>
             <h3 className="font-bold text-xl mb-1">Software Developer</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-3">
               Medtronic | Remote | 2017 - 2019
@@ -615,9 +693,9 @@ export default function Index({ posts, globalData }) {
                 </li>
               </ul>
             </div>
-          </div>
+          </ExperienceCard>
 
-          <div className="mb-10">
+          <ExperienceCard delay={0.8}>
             <h3 className="font-bold text-xl mb-1">Software Developer</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-3">
               Meridian Integration | Jacksonville, FL | 2016 - 2017
@@ -659,198 +737,271 @@ export default function Index({ posts, globalData }) {
                 </li>
               </ul>
             </div>
-          </div>
+          </ExperienceCard>
 
-          <h2 id="education" className="text-4xl mt-20 mb-7">
-            Education
-          </h2>
-          <div className="mb-10">
-            <p className="mb-2">
-              Studied Software Development at ITT Technical Institute, 2014 -
-              2016
-            </p>
-          </div>
+          <SectionWrapper delay={0.3}>
+            <motion.h2
+              id="education"
+              className="text-4xl mt-20 mb-7"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Education
+            </motion.h2>
+            <div className="mb-10">
+              <p className="mb-2">
+                Studied Software Development at ITT Technical Institute, 2014 -
+                2016
+              </p>
+            </div>
+          </SectionWrapper>
 
-          <h2 id="volunteer" className="text-4xl mt-20 mb-7">
-            Volunteer Experience
-          </h2>
-          <ul className="list-disc list-inside space-y-1 mb-10">
-            <li>Teaching Middle School Robotics Program 2023 - 2024</li>
-            <li>Speaker at BitRise Mobile DevOps Summit 2023</li>
-            <li>Co-organizer ReactJAX Meetup ~ 5 years</li>
-            <li>Audio and video production ~ 10 years</li>
-            <li>Drums on Sundays ~ 15 years</li>
-          </ul>
+          <SectionWrapper delay={0.3}>
+            <motion.h2
+              id="volunteer"
+              className="text-4xl mt-20 mb-7"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Volunteer Experience
+            </motion.h2>
+            <motion.ul
+              className="list-disc list-inside space-y-1 mb-10"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <li>Teaching Middle School Robotics Program 2023 - 2024</li>
+              <li>Speaker at BitRise Mobile DevOps Summit 2023</li>
+              <li>Co-organizer ReactJAX Meetup ~ 5 years</li>
+              <li>Audio and video production ~ 10 years</li>
+              <li>Drums on Sundays ~ 15 years</li>
+            </motion.ul>
+          </SectionWrapper>
 
-          <h2 id="skills" className="text-4xl mt-20 mb-7">
-            Skills
-          </h2>
-          <div className="mb-10">
-            <p className="mb-4">
-              Software Engineering, System Debugging, Software Updating, Quality
-              Assurance, Code Development, Team Management, Web Development,
-              Policy & Procedure Compliance, Problem Solving, and Verbal &
-              Written Communication.
-            </p>
+          <SectionWrapper delay={0.3}>
+            <motion.h2
+              id="skills"
+              className="text-4xl mt-20 mb-7"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Skills
+            </motion.h2>
+            <div className="mb-10">
+              <p className="mb-4">
+                Software Engineering, System Debugging, Software Updating,
+                Quality Assurance, Code Development, Team Management, Web
+                Development, Policy & Procedure Compliance, Problem Solving, and
+                Verbal & Written Communication.
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Software Development Life Cycle / Methodologies:
-            </h3>
-            <p className="mb-4">
-              Design Patterns, SOLID Principles, Test Driven Development, Object
-              Oriented Programming, Functional Programming, Pair Programming,
-              Agile & Waterfall, Schema-First Development, Monorepo Architecture
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Software Development Life Cycle / Methodologies:
+              </h3>
+              <p className="mb-4">
+                Design Patterns, SOLID Principles, Test Driven Development,
+                Object Oriented Programming, Functional Programming, Pair
+                Programming, Agile & Waterfall, Schema-First Development,
+                Monorepo Architecture
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Frontend Web / Mobile:
-            </h3>
-            <p className="mb-4">
-              TypeScript, JavaScript, React, React Native, Next.js 14 (App
-              Router), React 18, Expo, Expo Router, NativeWind (Tailwind CSS),
-              TailwindCSS, shadcn/ui, Redux, Zustand, React Query (TanStack
-              Query), React Hook Form, Yup, Reactotron, Electron, Ionic,
-              Capacitor, Cordova, HTML 5, CSS, Sass, Styled Components,
-              MaterialUI, JSS, Bootstrap, Yarn, pnpm, Babel, ESLint, Office.js,
-              Formik, Reanimated, React Spring, React Native Track Player,
-              Visual Studio Code, Xcode, Android Studio, Objective-C, Swift,
-              Java, Kotlin, C++
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Frontend Web / Mobile:
+              </h3>
+              <p className="mb-4">
+                TypeScript, JavaScript, React, React Native, Next.js 14 (App
+                Router), React 18, Expo, Expo Router, NativeWind (Tailwind CSS),
+                TailwindCSS, shadcn/ui, Redux, Zustand, React Query (TanStack
+                Query), React Hook Form, Yup, Reactotron, Electron, Ionic,
+                Capacitor, Cordova, HTML 5, CSS, Sass, Styled Components,
+                MaterialUI, JSS, Bootstrap, Yarn, pnpm, Babel, ESLint,
+                Office.js, Formik, Reanimated, React Spring, React Native Track
+                Player, Visual Studio Code, Xcode, Android Studio, Objective-C,
+                Swift, Java, Kotlin, C++
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">API & Data Layer:</h3>
-            <p className="mb-4">
-              HTTP, REST, SOAP, Ajax, GraphQL, GraphQL Yoga, Apollo Client, AWS
-              AppSync, Prisma ORM, ZenStack, WebSockets, WebRTC, GRPC, React
-              Query (TanStack Query), Code Generation
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">API & Data Layer:</h3>
+              <p className="mb-4">
+                HTTP, REST, SOAP, Ajax, GraphQL, GraphQL Yoga, Apollo Client,
+                AWS AppSync, Prisma ORM, ZenStack, WebSockets, WebRTC, GRPC,
+                React Query (TanStack Query), Code Generation
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Backend Development:
-            </h3>
-            <p className="mb-4">
-              Node.js, NestJS 10, Fastify, Express, MeteorJS, Java, Ruby on
-              Rails, .NET, C#, EntityFramework, Dapper, Python, Postman, Visual
-              Studio, IntelliJ, Vercel Serverless Functions
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Backend Development:
+              </h3>
+              <p className="mb-4">
+                Node.js, NestJS 10, Fastify, Express, MeteorJS, Java, Ruby on
+                Rails, .NET, C#, EntityFramework, Dapper, Python, Postman,
+                Visual Studio, IntelliJ, Vercel Serverless Functions
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Authentication & Security:
-            </h3>
-            <p className="mb-4">
-              Firebase Auth, OAuth (Apple, Google, LinkedIn), JWT, Magic Links,
-              LinkedIn OIDC, Firebase Admin SDK, Multi-tenant Authorization,
-              Row-level Security, Cloudflare Turnstile, Biometric Login, MFA
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Authentication & Security:
+              </h3>
+              <p className="mb-4">
+                Firebase Auth, OAuth (Apple, Google, LinkedIn), JWT, Magic
+                Links, LinkedIn OIDC, Firebase Admin SDK, Multi-tenant
+                Authorization, Row-level Security, Cloudflare Turnstile,
+                Biometric Login, MFA
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Testing & Quality Assurance:
-            </h3>
-            <p className="mb-4">
-              Jest, React Native Testing Library, Maestro (E2E), Detox, Code
-              Coverage, Test Driven Development, Automated Testing, End-to-End
-              Testing
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Testing & Quality Assurance:
+              </h3>
+              <p className="mb-4">
+                Jest, React Native Testing Library, Maestro (E2E), Detox, Code
+                Coverage, Test Driven Development, Automated Testing, End-to-End
+                Testing
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Build/Package/DevOps Tools:
-            </h3>
-            <p className="mb-4">
-              Shell, Bash, Zsh, Docker, Fastlane, BitRise, EAS Build (Expo
-              Application Services), ImageMagick, Jenkins, GitHub Actions,
-              Webpack, Turbo Monorepo, Husky, Prettier, ESLint, TypeScript,
-              Railway, AWS KMS, SOPS, Spaceship, Starship, ERB, EJS, Storybook,
-              OsaScript
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Build/Package/DevOps Tools:
+              </h3>
+              <p className="mb-4">
+                Shell, Bash, Zsh, Docker, Fastlane, BitRise, EAS Build (Expo
+                Application Services), ImageMagick, Jenkins, GitHub Actions,
+                Webpack, Turbo Monorepo, Husky, Prettier, ESLint, TypeScript,
+                Railway, AWS KMS, SOPS, Spaceship, Starship, ERB, EJS,
+                Storybook, OsaScript
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Databases & Data Management:
-            </h3>
-            <p className="mb-4">
-              PostgreSQL (Neon), Microsoft SQL Server, MongoDB, Firebase, Oracle
-              DB, MySQL, Prisma ORM, ZenStack, Database Migrations, ETL Scripts,
-              Data Import Pipelines
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Databases & Data Management:
+              </h3>
+              <p className="mb-4">
+                PostgreSQL (Neon), Microsoft SQL Server, MongoDB, Firebase,
+                Oracle DB, MySQL, Prisma ORM, ZenStack, Database Migrations, ETL
+                Scripts, Data Import Pipelines
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Cloud Services & Infrastructure:
-            </h3>
-            <p className="mb-4">
-              AWS (S3, SES, SNS, KMS, AppSync), Azure, Google Cloud Platform
-              (GCP), Vercel, Railway, Firebase (Auth, Cloud Messaging,
-              Analytics, Crashlytics), Sentry, RevenueCat, Moodle LMS
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Cloud Services & Infrastructure:
+              </h3>
+              <p className="mb-4">
+                AWS (S3, SES, SNS, KMS, AppSync), Azure, Google Cloud Platform
+                (GCP), Vercel, Railway, Firebase (Auth, Cloud Messaging,
+                Analytics, Crashlytics), Sentry, RevenueCat, Moodle LMS
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Mobile App Services:
-            </h3>
-            <p className="mb-4">
-              RevenueCat (In-App Purchases, Subscriptions), Firebase Cloud
-              Messaging, AsyncStorage, Apple App Store, Google Play Console, App
-              Store Management, Certificate Management
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Mobile App Services:
+              </h3>
+              <p className="mb-4">
+                RevenueCat (In-App Purchases, Subscriptions), Firebase Cloud
+                Messaging, AsyncStorage, Apple App Store, Google Play Console,
+                App Store Management, Certificate Management
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Internationalization & Localization:
-            </h3>
-            <p className="mb-4">
-              i18n, Multi-translation Support, Localization
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Internationalization & Localization:
+              </h3>
+              <p className="mb-4">
+                i18n, Multi-translation Support, Localization
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">3D:</h3>
-            <p className="mb-4">
-              WebGL, Blender, Unity 3D, Three JS, React 360, React Three Fiber
-            </p>
+              <h3 className="font-bold text-xl mb-3 mt-6">3D:</h3>
+              <p className="mb-4">
+                WebGL, Blender, Unity 3D, Three JS, React 360, React Three Fiber
+              </p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">GIS:</h3>
-            <p className="mb-4">Google Maps, Leaflet, Node Geocoder</p>
+              <h3 className="font-bold text-xl mb-3 mt-6">GIS:</h3>
+              <p className="mb-4">Google Maps, Leaflet, Node Geocoder</p>
 
-            <h3 className="font-bold text-xl mb-3 mt-6">
-              Legacy Technologies:
-            </h3>
-            <p className="mb-4">Cobol, PL/SQL</p>
-          </div>
+              <h3 className="font-bold text-xl mb-3 mt-6">
+                Legacy Technologies:
+              </h3>
+              <p className="mb-4">Cobol, PL/SQL</p>
+            </div>
+          </SectionWrapper>
 
-          <h2 id="projects" className="text-4xl mt-20 mb-7">
-            Projects
-          </h2>
-          <h3 className="font-bold mb-2">StickRPG 4D</h3>
-          <Link href="https://stickrpg4d.com">
-            <a className="underline text-blue-300 hover:text-primary">
-              www.stickrpg4d.com
-            </a>
-          </Link>
-          <p className="text-justify mb-7">
-            Launched a 3D web game using React, R3F, and ThreeJS. Designed and
-            developed custom interactive environments, third-person character
-            controls, dynamic physics, real-time lighting and shadows,
-            animations, independent game systems, NPC dialog, branching
-            storyline, and visual and audio effects.
-          </p>
-
-          <h2 id="contact" className="text-4xl mt-20 mb-7">
-            Contact
-          </h2>
-          <div>
-            <Link href="mailto:matt@mattblack.dev">
-              <a className="font-extrabold mx-2 leading-loose hover:text-primary">
-                matt@mattblack.dev
-              </a>
+          <SectionWrapper delay={0.3}>
+            <motion.h2
+              id="projects"
+              className="text-4xl mt-20 mb-7"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Projects
+            </motion.h2>
+            <h3 className="font-bold mb-2">StickRPG 4D</h3>
+            <Link href="https://stickrpg4d.com">
+              <motion.a
+                className="underline text-blue-300 hover:text-primary inline-block"
+                whileHover={{ scale: 1.05, x: 5 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              >
+                www.stickrpg4d.com
+              </motion.a>
             </Link>
-          </div>
-          <div>
-            <Link href="tel:+19042489051">
-              <a className="font-extrabold mx-2 leading-loose hover:text-primary">
-                +1-904-248-9051
-              </a>
-            </Link>
+            <p className="text-justify mb-7">
+              Launched a 3D web game using React, R3F, and ThreeJS. Designed and
+              developed custom interactive environments, third-person character
+              controls, dynamic physics, real-time lighting and shadows,
+              animations, independent game systems, NPC dialog, branching
+              storyline, and visual and audio effects.
+            </p>
+          </SectionWrapper>
+
+          <SectionWrapper delay={0.3}>
+            <motion.h2
+              id="contact"
+              className="text-4xl mt-20 mb-7"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Contact
+            </motion.h2>
             <div>
-              <Link href="https://www.linkedin.com/in/matt-black-software">
-                <a className="font-extrabold mx-2 leading-loose hover:text-primary">
-                  LinkedIn
-                </a>
+              <Link href="mailto:matt@mattblack.dev">
+                <motion.a
+                  className="font-extrabold mx-2 leading-loose hover:text-primary inline-block"
+                  whileHover={{ scale: 1.1, x: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                >
+                  matt@mattblack.dev
+                </motion.a>
               </Link>
             </div>
-          </div>
+            <div>
+              <Link href="tel:+19042489051">
+                <motion.a
+                  className="font-extrabold mx-2 leading-loose hover:text-primary inline-block"
+                  whileHover={{ scale: 1.1, x: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                >
+                  +1-904-248-9051
+                </motion.a>
+              </Link>
+              <div>
+                <Link href="https://www.linkedin.com/in/matt-black-software">
+                  <motion.a
+                    className="font-extrabold mx-2 leading-loose hover:text-primary inline-block"
+                    whileHover={{ scale: 1.1, x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  >
+                    LinkedIn
+                  </motion.a>
+                </Link>
+              </div>
+            </div>
+          </SectionWrapper>
         </div>
       </main>
       <Footer copyrightText={globalData.footerText} />
