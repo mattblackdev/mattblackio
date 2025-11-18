@@ -8,7 +8,6 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Layout from '../components/Layout';
 import SEO from '../components/SEO';
-import profilePic from '../public/profile_pic.png';
 import { getGlobalData } from '../utils/global-data';
 
 const description =
@@ -81,7 +80,7 @@ export default function Index({ posts, globalData }) {
             <Image
               alt="profile headshot of a handsome man stading in front of glass windows"
               className="rounded-full relative z-10"
-              src={profilePic}
+              src="/profile_pic.png"
               width="174"
               height="174"
               priority
