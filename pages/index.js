@@ -84,6 +84,7 @@ export default function Index({ posts, globalData }) {
               width="174"
               height="174"
               priority
+              unoptimized
             />
           </motion.div>
         </motion.div>
