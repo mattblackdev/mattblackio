@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 
 const navVariants = {
@@ -24,10 +25,48 @@ const navItemVariants = {
   },
 };
 
+const navItems = [
+  { label: 'Experience', href: '/sections/experience', hash: '#experience' },
+  { label: 'Education', href: '/sections/education', hash: '#education' },
+  { label: 'Volunteer', href: '/sections/volunteer', hash: '#volunteer' },
+  { label: 'Skills', href: '/sections/skills', hash: '#skills' },
+  { label: 'Projects', href: '/sections/projects', hash: '#projects' },
+  { label: 'Contact', href: '/#contact', hash: '#contact' },
+];
+
 export default function Header({ name }) {
+  const router = useRouter();
+  const isHomePage = router.pathname === '/';
+
+  const handleHashClick = (e, item) => {
+    if (isHomePage && item.hash) {
+      e.preventDefault();
+      const element = document.querySelector(item.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
+  const getNavLink = (item) => {
+    // On home page, use hash links for smooth scrolling
+    // On other pages, use full routes
+    if (isHomePage && item.hash) {
+      return item.hash;
+    }
+    return item.href;
+  };
+
+  const isActive = (item) => {
+    if (isHomePage && router.asPath === '/') {
+      return false; // No active state on home page for section links
+    }
+    return router.asPath.startsWith(item.href);
+  };
+
   return (
     <motion.nav
-      className="mt-2 p-2 w-full flex dark:text-white"
+      className="sticky top-0 z-50 mt-2 p-2 w-full flex flex-wrap items-center dark:text-white bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-primary"
       variants={navVariants}
       initial="hidden"
       animate="visible"
@@ -49,70 +88,34 @@ export default function Header({ name }) {
         </motion.a>
       </Link>
       <span className="flex-1" />
-      <Link href="#experience">
-        <motion.a
-          className="font-extrabold mx-2 leading-loose hover:text-primary cursor-pointer relative group"
-          variants={navItemVariants}
-          whileHover={{ y: -2 }}
-          whileTap={{ y: 0 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-        >
-          <span className="relative z-10">Experience</span>
-          <motion.span
-            className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-            initial={{ width: 0 }}
-            whileHover={{ width: '100%' }}
-          />
-        </motion.a>
-      </Link>
-      <Link href="#skills">
-        <motion.a
-          className="font-extrabold mx-2 leading-loose hover:text-primary cursor-pointer relative group"
-          variants={navItemVariants}
-          whileHover={{ y: -2 }}
-          whileTap={{ y: 0 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-        >
-          <span className="relative z-10">Skills</span>
-          <motion.span
-            className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-            initial={{ width: 0 }}
-            whileHover={{ width: '100%' }}
-          />
-        </motion.a>
-      </Link>
-      <Link href="#projects">
-        <motion.a
-          className="font-extrabold mx-2 leading-loose hover:text-primary cursor-pointer relative group"
-          variants={navItemVariants}
-          whileHover={{ y: -2 }}
-          whileTap={{ y: 0 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-        >
-          <span className="relative z-10">Projects</span>
-          <motion.span
-            className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-            initial={{ width: 0 }}
-            whileHover={{ width: '100%' }}
-          />
-        </motion.a>
-      </Link>
-      <Link href="#contact">
-        <motion.a
-          className="font-extrabold mx-2 leading-loose hover:text-primary cursor-pointer relative group"
-          variants={navItemVariants}
-          whileHover={{ y: -2 }}
-          whileTap={{ y: 0 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-        >
-          <span className="relative z-10">Contact</span>
-          <motion.span
-            className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"
-            initial={{ width: 0 }}
-            whileHover={{ width: '100%' }}
-          />
-        </motion.a>
-      </Link>
+      <div className="flex flex-wrap items-center gap-1 md:gap-0">
+        {navItems.map((item, index) => {
+          const active = isActive(item);
+          return (
+            <Link key={item.label} href={getNavLink(item)}>
+              <motion.a
+                className={`font-extrabold mx-1 md:mx-2 leading-loose hover:text-primary cursor-pointer relative group text-sm md:text-base ${
+                  active ? 'text-primary' : ''
+                }`}
+                variants={navItemVariants}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                onClick={(e) => handleHashClick(e, item)}
+              >
+                <span className="relative z-10">{item.label}</span>
+                <motion.span
+                  className={`absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 ${
+                    active ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                  initial={{ width: active ? '100%' : 0 }}
+                  whileHover={{ width: '100%' }}
+                />
+              </motion.a>
+            </Link>
+          );
+        })}
+      </div>
     </motion.nav>
   );
 }
