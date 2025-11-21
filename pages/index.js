@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getPosts } from '../utils/mdx-utils';
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import Image from 'next/image';
 import Footer from '../components/Footer';
@@ -49,6 +49,64 @@ const ExperienceCard = ({ children, delay = 0 }) => {
 };
 
 export default function Index({ posts, globalData }) {
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    // Create audio element on mount
+    audioRef.current = new Audio('/welcome.mp3');
+
+    // Cleanup on unmount
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleProfileClick = () => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      // If playing, pause it
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      // If not playing, always start from the beginning
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+    };
+
+    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('play', handlePlay);
+
+    return () => {
+      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('play', handlePlay);
+    };
+  }, []);
+
   return (
     <Layout>
       <SEO title={globalData.name} description={description} />
@@ -64,7 +122,8 @@ export default function Index({ posts, globalData }) {
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-            className="relative"
+            className="relative cursor-pointer"
+            onClick={handleProfileClick}
           >
             <motion.div
               className="absolute inset-0 rounded-full bg-primary/20 blur-xl"
@@ -87,6 +146,45 @@ export default function Index({ posts, globalData }) {
               priority
               unoptimized
             />
+            {/* Audio icon */}
+            <motion.div
+              className="absolute bottom-0 right-0 z-20"
+              initial={{ opacity: 0.6 }}
+              animate={{
+                opacity: isPlaying ? 0.9 : 0.6,
+                scale: isPlaying ? [1, 1.05, 1] : 1,
+              }}
+              transition={{
+                opacity: { duration: 0.2 },
+                scale: {
+                  duration: 1.2,
+                  repeat: isPlaying ? Infinity : 0,
+                  ease: 'easeInOut',
+                },
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-primary"
+              >
+                <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                <path
+                  d="M15.54 8.46a5 5 0 0 1 0 7.07"
+                  opacity={isPlaying ? 1 : 0.6}
+                />
+                {isPlaying && (
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" opacity={0.7} />
+                )}
+              </svg>
+            </motion.div>
           </motion.div>
         </motion.div>
         <div className="px-10 w-full mx-auto mt-16">

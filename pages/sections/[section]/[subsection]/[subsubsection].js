@@ -6,6 +6,7 @@ import SEO from '../../../../components/SEO';
 import { getGlobalData } from '../../../../utils/global-data';
 import Link from 'next/link';
 import { sectionData } from '../../../../utils/section-data';
+import Breadcrumb from '../../../../components/Breadcrumb';
 
 export default function SubSubsectionPage({ globalData }) {
   const router = useRouter();
@@ -21,10 +22,10 @@ export default function SubSubsectionPage({ globalData }) {
         <SEO title="Sub-subsection Not Found" description="Sub-subsection not found" />
         <Header />
         <main className="px-10 w-full mx-auto mt-16">
-          <h1 className="text-4xl mb-4">Sub-subsection Not Found</h1>
-          <Link href="/">
-            <a className="text-blue-500 hover:underline">← Back to home</a>
-          </Link>
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumb items={[{ label: 'Home', href: '/' }]} />
+            <h1 className="text-4xl mb-4">Sub-subsection Not Found</h1>
+          </div>
         </main>
         <Footer copyrightText={globalData.footerText} />
       </Layout>
@@ -37,13 +38,14 @@ export default function SubSubsectionPage({ globalData }) {
       <Header />
       <main className="px-10 w-full mx-auto mt-16">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <Link href={`/sections/${section}/${subsection}`}>
-              <a className="text-blue-500 hover:underline inline-flex items-center">
-                ← Back to {subsectionData.title}
-              </a>
-            </Link>
-          </div>
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              { label: sectionInfo.title, href: `/sections/${section}` },
+              { label: subsectionData.title, href: `/sections/${section}/${subsection}` },
+              { label: subSubsectionData.title, href: null },
+            ]}
+          />
           <h1 className="text-4xl mb-4">{subSubsectionData.title}</h1>
           {subsectionData.company && (
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">

@@ -9,6 +9,7 @@ import { getGlobalData } from '../../../utils/global-data';
 import Link from 'next/link';
 import SectionSummary from '../../../components/SectionSummary';
 import { sectionData } from '../../../utils/section-data';
+import Breadcrumb from '../../../components/Breadcrumb';
 
 const SectionWrapper = ({ children, delay = 0 }) => {
   const ref = useRef(null);
@@ -39,10 +40,10 @@ export default function SubsectionPage({ globalData }) {
         <SEO title="Subsection Not Found" description="Subsection not found" />
         <Header />
         <main className="px-10 w-full mx-auto mt-16">
-          <h1 className="text-4xl mb-4">Subsection Not Found</h1>
-          <Link href="/">
-            <a className="text-blue-500 hover:underline">← Back to home</a>
-          </Link>
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumb items={[{ label: 'Home', href: '/' }]} />
+            <h1 className="text-4xl mb-4">Subsection Not Found</h1>
+          </div>
         </main>
         <Footer copyrightText={globalData.footerText} />
       </Layout>
@@ -55,13 +56,13 @@ export default function SubsectionPage({ globalData }) {
       <Header />
       <main className="px-10 w-full mx-auto mt-16">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <Link href={`/sections/${section}`}>
-              <a className="text-blue-500 hover:underline inline-flex items-center">
-                ← Back to {sectionInfo.title}
-              </a>
-            </Link>
-          </div>
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              { label: sectionInfo.title, href: `/sections/${section}` },
+              { label: subsectionData.title, href: null },
+            ]}
+          />
           <h1 className="text-4xl mb-4">{subsectionData.title}</h1>
           {subsectionData.company && (
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">

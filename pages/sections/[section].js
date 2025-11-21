@@ -9,6 +9,7 @@ import { getGlobalData } from '../../utils/global-data';
 import Link from 'next/link';
 import SectionSummary from '../../components/SectionSummary';
 import { sectionData } from '../../utils/section-data';
+import Breadcrumb from '../../components/Breadcrumb';
 
 const SectionWrapper = ({ children, delay = 0 }) => {
   const ref = useRef(null);
@@ -38,10 +39,10 @@ export default function SectionPage({ globalData }) {
         <SEO title="Section Not Found" description="Section not found" />
         <Header />
         <main className="px-10 w-full mx-auto mt-16">
-          <h1 className="text-4xl mb-4">Section Not Found</h1>
-          <Link href="/">
-            <a className="text-blue-500 hover:underline">← Back to home</a>
-          </Link>
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumb items={[{ label: 'Home', href: '/' }]} />
+            <h1 className="text-4xl mb-4">Section Not Found</h1>
+          </div>
         </main>
         <Footer copyrightText={globalData.footerText} />
       </Layout>
@@ -54,13 +55,12 @@ export default function SectionPage({ globalData }) {
       <Header />
       <main className="px-10 w-full mx-auto mt-16">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <Link href="/">
-              <a className="text-blue-500 hover:underline inline-flex items-center">
-                ← Back to home
-              </a>
-            </Link>
-          </div>
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              { label: sectionInfo.title, href: null },
+            ]}
+          />
           <h1 className="text-4xl mb-8">{sectionInfo.title}</h1>
           
           <div className="space-y-4">
