@@ -34,7 +34,7 @@ const navItems = [
   { label: 'Contact', href: '/#contact', hash: '#contact' },
 ];
 
-export default function Header({ name }) {
+export default function Header() {
   const router = useRouter();
   const isHomePage = router.pathname === '/';
 
