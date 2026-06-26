@@ -1,42 +1,24 @@
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Layout from '../components/Layout';
+import PersonJsonLd from '../components/PersonJsonLd';
 import SectionSummary from '../components/SectionSummary';
+import SectionWrapper from '../components/SectionWrapper';
 import SEO from '../components/SEO';
 import { getGlobalData } from '../utils/global-data';
-
-const description =
-  'Highly skilled and results driven senior software engineer with 10 years of experience in full stack web, mobile, and cross-platform application development. Proficient in React and React Native, cloud, enterprise, and micro-service architectures. Skilled in CI/CD, end-to-end automated testing, and process automation. Experienced in IT leadership, mentorship, feature estimation, development & debugging, dependency upgrades, and tech migrations. Passionate about learning and contributing to the tech community through speaking and attending conferences, local meetups, and contributing to open source. Values collaboration with cross-functional teams to create applications that meet user needs, provide business value, and deliver great experiences. Team player and servant leader. Proficient with Cursor AI IDE.';
-
-const SectionWrapper = ({ children, delay = 0 }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '200px' });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, delay }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+import { DEFAULT_TITLE } from '../utils/site-config';
 
 export default function Index({ globalData }) {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    // Create audio element on mount
     audioRef.current = new Audio('/hi.mp3');
 
-    // Cleanup on unmount
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -49,11 +31,9 @@ export default function Index({ globalData }) {
     if (!audioRef.current) return;
 
     if (isPlaying) {
-      // If playing, pause it
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      // If not playing, always start from the beginning
       audioRef.current.currentTime = 0;
       audioRef.current.play();
       setIsPlaying(true);
@@ -89,7 +69,17 @@ export default function Index({ globalData }) {
 
   return (
     <Layout>
-      <SEO title={globalData.name} description={description} />
+      <SEO
+        title={DEFAULT_TITLE}
+        description={globalData.bio}
+        path="/"
+      />
+      <PersonJsonLd
+        name={globalData.name}
+        jobTitle={globalData.jobTitle}
+        email={globalData.email}
+        linkedIn={globalData.linkedIn}
+      />
       <Header />
       <main className="w-full">
         <motion.div
@@ -118,7 +108,7 @@ export default function Index({ globalData }) {
               }}
             />
             <Image
-              alt="profile headshot of a handsome man stading in front of glass windows"
+              alt="Profile headshot of Matt Black, senior software engineer"
               className="rounded-full relative z-10"
               src="/profile_pic.png"
               width="174"
@@ -126,7 +116,6 @@ export default function Index({ globalData }) {
               priority
               unoptimized
             />
-            {/* Audio icon */}
             <motion.div
               className="absolute bottom-0 right-0 z-20"
               initial={{ opacity: 0.6 }}
@@ -175,7 +164,7 @@ export default function Index({ globalData }) {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              {description}
+              {globalData.bio}
             </motion.p>
           </SectionWrapper>
 
@@ -247,13 +236,13 @@ export default function Index({ globalData }) {
             </motion.h2>
             <div>
               <motion.a
-                href="mailto:matt@mattblack.dev"
+                href={`mailto:${globalData.email}`}
                 className="font-extrabold mx-2 leading-loose hover:text-primary inline-block"
                 whileHover={{ scale: 1.1, x: 5 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               >
-                matt@mattblack.dev
+                {globalData.email}
               </motion.a>
             </div>
             <div>
@@ -269,7 +258,7 @@ export default function Index({ globalData }) {
             </div>
             <div>
               <motion.a
-                href="https://www.linkedin.com/in/matt-black-software"
+                href={globalData.linkedIn}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-extrabold mx-2 leading-loose hover:text-primary inline-block"

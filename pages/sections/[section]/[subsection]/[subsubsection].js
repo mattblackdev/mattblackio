@@ -1,40 +1,31 @@
-import { useRouter } from 'next/router';
 import Layout from '../../../../components/Layout';
 import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import SEO from '../../../../components/SEO';
+import BulletList from '../../../../components/BulletList';
 import { getGlobalData } from '../../../../utils/global-data';
-import Link from 'next/link';
-import { sectionData } from '../../../../utils/section-data';
+import {
+  sectionData,
+  getSection,
+  getSubsection,
+  getSubSubsection,
+} from '../../../../utils/section-data';
 import Breadcrumb from '../../../../components/Breadcrumb';
 
-export default function SubSubsectionPage({ globalData }) {
-  const router = useRouter();
-  const { section, subsection, subsubsection } = router.query;
-
-  const sectionInfo = sectionData[section];
-  const subsectionData = sectionInfo?.subsections?.find((sub) => sub.id === subsection);
-  const subSubsectionData = subsectionData?.subSubsections?.find((subSub) => subSub.id === subsubsection);
-
-  if (!sectionInfo || !subsectionData || !subSubsectionData) {
-    return (
-      <Layout>
-        <SEO title="Sub-subsection Not Found" description="Sub-subsection not found" />
-        <Header />
-        <main className="px-10 w-full mx-auto mt-16">
-          <div className="max-w-4xl mx-auto">
-            <Breadcrumb items={[{ label: 'Home', href: '/' }]} />
-            <h1 className="text-4xl mb-4">Sub-subsection Not Found</h1>
-          </div>
-        </main>
-        <Footer copyrightText={globalData.footerText} />
-      </Layout>
-    );
-  }
-
+export default function SubSubsectionPage({
+  globalData,
+  section,
+  sectionInfo,
+  subsectionData,
+  subSubsectionData,
+}) {
   return (
     <Layout>
-      <SEO title={`${subSubsectionData.title} - ${globalData.name}`} description={subSubsectionData.summary} />
+      <SEO
+        title={`${subSubsectionData.title} - ${globalData.name}`}
+        description={subSubsectionData.summary}
+        path={`/sections/${section}/${subsectionData.id}/${subSubsectionData.id}`}
+      />
       <Header />
       <main className="px-10 w-full mx-auto mt-16">
         <div className="max-w-4xl mx-auto">
@@ -42,14 +33,19 @@ export default function SubSubsectionPage({ globalData }) {
             items={[
               { label: 'Home', href: '/' },
               { label: sectionInfo.title, href: `/sections/${section}` },
-              { label: subsectionData.title, href: `/sections/${section}/${subsection}` },
+              {
+                label: subsectionData.title,
+                href: `/sections/${section}/${subsectionData.id}`,
+              },
               { label: subSubsectionData.title, href: null },
             ]}
           />
           <h1 className="text-4xl mb-4">{subSubsectionData.title}</h1>
           {subsectionData.company && (
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
-              {subsectionData.company} {subsectionData.location && `| ${subsectionData.location}`} {subsectionData.period && `| ${subsectionData.period}`}
+              {subsectionData.company}
+              {subsectionData.location && ` | ${subsectionData.location}`}
+              {subsectionData.period && ` | ${subsectionData.period}`}
             </p>
           )}
           {subsectionData.period && !subsectionData.company && (
@@ -58,7 +54,7 @@ export default function SubSubsectionPage({ globalData }) {
             </p>
           )}
           <div className="prose prose-lg max-w-none dark:prose-invert">
-            {subSubsectionData.content}
+            <BulletList bullets={subSubsectionData.bullets} />
           </div>
         </div>
       </main>
@@ -67,19 +63,43 @@ export default function SubSubsectionPage({ globalData }) {
   );
 }
 
-export function getStaticProps() {
+export function getStaticProps({ params }) {
   const globalData = getGlobalData();
-  return { props: { globalData } };
+  const sectionInfo = getSection(params.section);
+  const subsectionData = getSubsection(params.section, params.subsection);
+  const subSubsectionData = getSubSubsection(
+    params.section,
+    params.subsection,
+    params.subsubsection
+  );
+
+  if (!sectionInfo || !subsectionData || !subSubsectionData) {
+    return { notFound: true };
+  }
+
+  return {
+    props: {
+      globalData,
+      section: params.section,
+      sectionInfo,
+      subsectionData,
+      subSubsectionData,
+    },
+  };
 }
 
 export async function getStaticPaths() {
   const paths = [];
-  
+
   Object.keys(sectionData).forEach((section) => {
     sectionData[section].subsections.forEach((subsection) => {
       subsection.subSubsections?.forEach((subSubsection) => {
         paths.push({
-          params: { section, subsection: subsection.id, subsubsection: subSubsection.id },
+          params: {
+            section,
+            subsection: subsection.id,
+            subsubsection: subSubsection.id,
+          },
         });
       });
     });
@@ -90,4 +110,3 @@ export async function getStaticPaths() {
     fallback: false,
   };
 }
-
