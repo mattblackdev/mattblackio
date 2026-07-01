@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
+import ChatWidget from '../components/ChatWidget';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Layout from '../components/Layout';
@@ -273,6 +274,7 @@ export default function Index({ globalData }) {
         </div>
       </main>
       <Footer copyrightText={globalData.footerText} />
+      <ChatWidget />
     </Layout>
   );
 }

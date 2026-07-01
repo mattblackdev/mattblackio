@@ -34,3 +34,16 @@ Resume content lives in [`utils/section-data.js`](utils/section-data.js). Site-w
 | `BLOG_FOOTER_TEXT` | Footer text |
 | `BLOG_EMAIL` | Contact email |
 | `BLOG_LINKEDIN` | LinkedIn profile URL |
+| `OPENAI_API_KEY` | **Required** for the résumé chat assistant. Server-side only — never exposed to the browser. |
+| `OPENAI_MODEL` | Optional. Chat model for the assistant (default: `gpt-4o-mini`). |
+
+## Résumé chat assistant
+
+The homepage includes a subtle floating action button (bottom-right) that opens a chat window powered by [`components/ChatWidget.js`](components/ChatWidget.js). Questions are sent to the serverless route [`pages/api/chat.js`](pages/api/chat.js), which grounds the LLM in the résumé content (via [`utils/resume-context.js`](utils/resume-context.js)) and instructs it to answer only questions about Matt's background, declining anything off-topic.
+
+To enable it, set `OPENAI_API_KEY` in your environment:
+
+- **Local:** add it to a `.env.local` file (git-ignored): `OPENAI_API_KEY=sk-...`
+- **Netlify:** add it under Site settings → Environment variables. Netlify's Next.js runtime runs `pages/api/*` as serverless functions automatically.
+
+To use a different provider (e.g. Anthropic), swap the request logic in [`pages/api/chat.js`](pages/api/chat.js).
